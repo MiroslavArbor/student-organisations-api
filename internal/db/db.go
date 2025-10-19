@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	// "time"
 
 	"github.com/MiroslavArbor/student-organisations-api/internal/config"
 	"github.com/MiroslavArbor/student-organisations-api/internal/models"
@@ -25,6 +26,15 @@ func InitDB(config *config.Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Configure connection pool
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(25)
 
 	err = db.AutoMigrate(
 		&models.Organisation{},
